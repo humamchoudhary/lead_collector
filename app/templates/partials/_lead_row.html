@@ -1,0 +1,25 @@
+{% for lead in leads.items %}
+<tr class="hover:bg-gray-50">
+    <td class="px-6 py-4 whitespace-nowrap">
+        <input type="checkbox" class="lead-checkbox" value="{{ lead.id }}">
+    </td>
+    <td class="px-6 py-4 whitespace-nowrap">{{ lead.id }}</td>
+    <td class="px-6 py-4 whitespace-nowrap">{{ lead.platform }}</td>
+    <td class="px-6 py-4 whitespace-nowrap">{{ lead.username }}</td>
+    <td class="px-6 py-4 whitespace-nowrap">{{ lead.status }}</td>
+    <td class="px-6 py-4 whitespace-nowrap">{{ lead.discovered_at }}</td>
+    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+        <a href="{{ url_for('main.view_lead', lead_id=lead.id) }}" class="text-indigo-600 hover:text-indigo-900">View</a>
+    </td>
+</tr>
+{% endfor %}
+{% if leads.has_next %}
+<tr hx-get="{{ url_for('main.get_leads_data', page=leads.next_num, platform=active_platform) }}" 
+    hx-trigger="intersect once" 
+    hx-swap="outerHTML">
+    <td colspan="7" class="px-6 py-4 whitespace-nowrap text-center">
+        Loading more...
+    </td>
+</tr>
+{% endif %}
+

@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="flex justify-between items-center pt-3 pb-2 mb-3 border-b">
+    <h1 class="text-2xl font-semibold">Dashboard</h1>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <!-- Total Leads -->
+    <div class="bg-white p-6 rounded-lg shadow">
+        <h3 class="text-lg font-medium text-gray-900">Total Leads</h3>
+        <p class="mt-2 text-3xl font-bold text-gray-900">{{ stats.total_leads }}</p>
+    </div>
+
+    <!-- Unrouted Leads -->
+    <div class="bg-white p-6 rounded-lg shadow">
+        <h3 class="text-lg font-medium text-gray-900">Unrouted Leads</h3>
+        <p class="mt-2 text-3xl font-bold text-red-600">{{ stats.unrouted_leads }}</p>
+    </div>
+</div>
+
+<div class="mt-8">
+    <h3 class="text-lg leading-6 font-medium text-gray-900">
+        Leads by Platform
+    </h3>
+    <div class="mt-4 bg-white shadow overflow-hidden sm:rounded-lg">
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+                <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Platform</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Lead Count</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+                {% for platform, count in stats.leads_by_platform %}
+                <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4 whitespace-nowrap">{{ platform|capitalize }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ count }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="2" class="px-6 py-4 whitespace-nowrap text-center text-gray-500">No leads found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

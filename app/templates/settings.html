@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Settings{% endblock %}
+
+{% block content %}
+<div class="flex justify-between items-center pt-3 pb-2 mb-3 border-b">
+    <h1 class="text-2xl font-semibold">Settings</h1>
+</div>
+
+<div class="flex flex-wrap -mx-4">
+    <div class="w-full md:w-1/2 px-4">
+        <h3 class="text-xl font-semibold mb-4">API Keys</h3>
+        <form>
+            <div class="mb-4">
+                <label for="graphApiKey" class="block text-gray-700 text-sm font-bold mb-2">Graph API Key</label>
+                <input type="password" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="graphApiKey">
+            </div>
+            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Save</button>
+        </form>
+    </div>
+</div>
+
+<div class="flex flex-wrap -mx-4 mt-8">
+    <div class="w-full md:w-1/2 px-4">
+        <h3 class="text-xl font-semibold mb-4">Account</h3>
+        <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Sign Out</button>
+    </div>
+</div>
+{% endblock %}

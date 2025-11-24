@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Lead Collector{% endblock %}</title>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <div class="flex min-h-screen w-full">
+        <nav class="w-[250px] hidden md:block bg-gray-100 p-4">
+            <div class="sticky top-0 pt-3">
+                <ul class="space-y-2">
+                    <li>
+                        <a class="block p-2 text-gray-700 hover:bg-gray-200 rounded" href="{{ url_for('main.index') }}">
+                            Dashboard
+                        </a>
+                    </li>
+                    <li>
+                        <a class="block p-2 text-gray-700 hover:bg-gray-200 rounded" href="{{ url_for('main.leads') }}">
+                            Leads
+                        </a>
+                    </li>
+                    <li>
+                        <a class="block p-2 text-gray-700 hover:bg-gray-200 rounded" href="{{ url_for('main.settings') }}">
+                            Settings
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <main class="w-full  p-4">
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+</body>
+</html>

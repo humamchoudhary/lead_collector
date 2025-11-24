@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+
+{% block title %}Lead Details{% endblock %}
+
+{% block content %}
+<div class="flex justify-between items-center pt-3 pb-2 mb-3 border-b">
+    <h1 class="text-2xl font-semibold">Lead: {{ lead.username }}</h1>
+    <a href="{{ url_for('main.leads') }}" class="text-blue-500 hover:text-blue-800">Back to Leads</a>
+</div>
+
+<div class="bg-white shadow overflow-hidden sm:rounded-lg">
+    <div class="px-4 py-5 sm:px-6">
+        <h3 class="text-lg leading-6 font-medium text-gray-900">
+            Lead Information
+        </h3>
+        <p class="mt-1 max-w-2xl text-sm text-gray-500">
+            Personal details and application.
+        </p>
+    </div>
+    <div class="border-t border-gray-200">
+        <dl>
+            <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium text-gray-500">Username</dt>
+                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ lead.username }}</dd>
+            </div>
+            <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium text-gray-500">Platform</dt>
+                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ lead.platform }}</dd>
+            </div>
+            <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium text-gray-500">Status</dt>
+                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ lead.status }}</dd>
+            </div>
+            <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium text-gray-500">Routed</dt>
+                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ lead.routed }}</dd>
+            </div>
+            <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium text-gray-500">Discovered At</dt>
+                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ lead.discovered_at }}</dd>
+            </div>
+            <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium text-gray-500">Profile URL</dt>
+                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"><a href="{{ lead.user_profile_url }}" target="_blank" class="text-blue-500 hover:text-blue-800">{{ lead.user_profile_url }}</a></dd>
+            </div>
+            <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium text-gray-500">Total Interactions</dt>
+                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ lead.total_interactions }}</dd>
+            </div>
+            <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium text-gray-500">Comments</dt>
+                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ lead.total_comments }}</dd>
+            </div>
+            <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium text-gray-500">Reactions</dt>
+                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ lead.total_reactions }}</dd>
+            </div>
+        </dl>
+    </div>
+</div>
+
+<div class="mt-8">
+    <h3 class="text-lg leading-6 font-medium text-gray-900">
+        Comments
+    </h3>
+    <div class="mt-4 bg-white shadow overflow-hidden sm:rounded-lg">
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+                <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Post ID</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Message</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created At</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+                {% for comment in lead.comments %}
+                <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4 whitespace-nowrap">{{ comment.post_id }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ comment.message }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ comment.created_time }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="3" class="px-6 py-4 whitespace-nowrap text-center text-gray-500">No comments found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="mt-8">
+    <h3 class="text-lg leading-6 font-medium text-gray-900">
+        Reactions
+    </h3>
+    <div class="mt-4 bg-white shadow overflow-hidden sm:rounded-lg">
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+                <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Post ID</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Reaction Type</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Discovered At</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+                {% for reaction in lead.reactions %}
+                <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4 whitespace-nowrap">{{ reaction.post_id }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ reaction.reaction_type }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ reaction.discovered_at }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="3" class="px-6 py-4 whitespace-nowrap text-center text-gray-500">No reactions found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+{% endblock %}

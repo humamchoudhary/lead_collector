@@ -1,4 +1,6 @@
 from flask import Flask
+
+from app.services import facebook_leads
 from .config import Config
 from .extentions import db, migrate, bcrypt
 from .routes import bps

@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+
+{% block title %}Leads{% endblock %}
+
+{% block content %}
+<style>
+    .highlight {
+        background-color: #fefcbf; /* A light yellow */
+        transition: background-color 0.5s ease;
+    }
+</style>
+<div class="flex justify-between items-center pt-3 pb-2 mb-3 border-b">
+    <h1 class="text-2xl font-semibold">Leads</h1>
+    <div class="flex items-center space-x-4">
+        <div class="relative">
+            <input type="text" id="search-input" placeholder="Search leads..."
+                   class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+        </div>
+        <div class="space-x-2">
+            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onclick="exportLeads('all')">Export All</button>
+            <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" onclick="exportLeads('selected')">Export Selected</button>
+            <button class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded" onclick="exportLeads('unrouted')">Export Unrouted</button>
+        </div>
+    </div>
+</div>
+
+<ul class="flex border-b border-gray-200" id="leadTabs" role="tablist">
+    <li class="mr-1">
+        <a href="{{ url_for('main.leads', platform='all') }}"
+           class="inline-block py-2 px-4 font-semibold
+                  {% if active_platform == 'all' %}
+                      bg-white border-l border-t border-r rounded-t text-blue-700
+                  {% else %}
+                      text-blue-500 hover:text-blue-800
+                  {% endif %}">
+            All
+        </a>
+    </li>
+    {% for platform in platforms %}
+    <li class="mr-1">
+        <a href="{{ url_for('main.leads', platform=platform) }}"
+           class="inline-block py-2 px-4 font-semibold
+                  {% if active_platform == platform %}
+                      bg-white border-l border-t border-r rounded-t text-blue-700
+                  {% else %}
+                      text-blue-500 hover:text-blue-800
+                  {% endif %}">
+            {{ platform|capitalize }}
+        </a>
+    </li>
+    {% endfor %}
+</ul>
+<div class="mt-4" id="leadTabsContent">
+    <div class="block" id="all-tab-pane" role="tabpanel" aria-labelledby="all-tab" tabindex="0">
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <input type="checkbox" id="select-all">
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">#</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Platform</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Username</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Discovered At</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="leads-table-body" hx-get="{{ url_for('main.get_leads_data', platform=active_platform) }}" hx-trigger="load" 
+hx-swap="beforeend"
+ class="bg-white divide-y divide-gray-200">
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('select-all').addEventListener('change', function(e) {
+        const checkboxes = document.querySelectorAll('#leads-table-body input[type="checkbox"]');
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = e.target.checked;
+        });
+    });
+
+    document.getElementById('search-input').addEventListener('input', function(e) {
+        const searchTerm = e.target.value.toLowerCase();
+        const rows = document.querySelectorAll('#leads-table-body tr');
+        let firstMatch = null;
+
+        // Clear previous highlights
+        rows.forEach(row => row.classList.remove('highlight'));
+
+        for (const row of rows) {
+            // Assuming username is in the 4th cell (index 3)
+            const usernameCell = row.cells[3]; 
+            if (usernameCell) {
+                const username = usernameCell.textContent.toLowerCase();
+                if (username.includes(searchTerm)) {
+                    firstMatch = row;
+                    break; // Stop at the first match
+                }
+            }
+        }
+
+        if (firstMatch) {
+            firstMatch.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            firstMatch.classList.add('highlight');
+            setTimeout(() => {
+                firstMatch.classList.remove('highlight');
+            }, 2000); // Highlight for 2 seconds
+        }
+    });
+
+    function getSelectedLeadIds() {
+        const checkboxes = document.querySelectorAll('#leads-table-body input[type="checkbox"]:checked');
+        const ids = Array.from(checkboxes).map(checkbox => checkbox.value);
+        return ids;
+    }
+
+    function exportLeads(exportType) {
+        let leadIds = [];
+        if (exportType === 'selected') {
+            leadIds = getSelectedLeadIds();
+            if (leadIds.length === 0) {
+                alert('Please select at least one lead to export.');
+                return;
+            }
+        }
+
+        const platform = '{{ active_platform }}';
+        const url = new URL("{{ url_for('main.export_leads', _external=True) }}");
+        url.searchParams.append('export_type', exportType);
+        url.searchParams.append('platform', platform);
+        
+        if (exportType === 'selected') {
+            leadIds.forEach(id => url.searchParams.append('lead_ids', id));
+        }
+
+        window.location.href = url;
+    }
+</script>
+{% endblock %}
